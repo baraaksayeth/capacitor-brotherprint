@@ -4,6 +4,7 @@ import com.brother.sdk.lmprinter.setting.CustomPaperSize
 import com.brother.sdk.lmprinter.setting.PrintImageSettings
 import com.brother.sdk.lmprinter.setting.QLPrintSettings
 import com.brother.sdk.lmprinter.setting.TDPrintSettings
+import com.brother.sdk.lmprinter.setting.PTPrintSettings
 import com.getcapacitor.PluginCall
 
 
@@ -38,6 +39,23 @@ class BrotherPrintSettings {
         }
 
         baseSettings.customPaperSize = customPaperSize
+        baseSettings.isAutoCut = call.getBoolean("autoCut", true)!!
+
+        return baseSettings
+    }
+
+    public fun modelPTSettings(call: PluginCall, settings: PTPrintSettings): PTPrintSettings {
+        val baseSettings = this.baseSettings(call, settings)
+
+        call.getString("labelName")?.let { size ->
+            try {
+                val enumSize = PTPrintSettings.LabelSize.valueOf(size)
+                baseSettings.labelSize = enumSize
+            } catch (e: IllegalArgumentException) {
+                throw RuntimeException("$size is not a valid PTPrintSettings.LabelSize")
+            }
+        }
+
         baseSettings.isAutoCut = call.getBoolean("autoCut", true)!!
 
         return baseSettings
