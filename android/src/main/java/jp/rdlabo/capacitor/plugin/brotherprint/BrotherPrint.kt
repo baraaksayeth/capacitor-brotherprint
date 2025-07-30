@@ -25,6 +25,7 @@ import com.brother.sdk.lmprinter.PrinterSearcher
 import com.brother.sdk.lmprinter.PrinterSearcher.cancelNetworkSearch
 import com.brother.sdk.lmprinter.setting.PrintSettings
 import com.brother.sdk.lmprinter.setting.QLPrintSettings
+import com.brother.sdk.lmprinter.setting.PTPrintSettings
 import com.brother.sdk.lmprinter.setting.TDPrintSettings
 import com.getcapacitor.JSObject
 import com.getcapacitor.PermissionState
@@ -97,6 +98,10 @@ class BrotherPrint : Plugin() {
         } else if (printerModel != null && modelName.startsWith("TD")) {
             settings = TDPrintSettings(printerModel)
             settings = BrotherPrintSettings().modelTDSettings(call, settings)
+            settings.workPath = bridge.context.cacheDir.path;
+        } else if (printerModel != null && modelName.startsWith("PT")) {
+            settings = PTPrintSettings(printerModel)
+            settings = BrotherPrintSettings().modelPTSettings(call, settings)
             settings.workPath = bridge.context.cacheDir.path;
         } else {
             call.reject("Error - modelName:$modelName is not supported")
